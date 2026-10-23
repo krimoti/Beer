@@ -1,6 +1,6 @@
 /* בירה על המלצר - Service Worker
    לעדכון גרסה: הגדל את VERSION (למשל 1.0.1) ועלה ל-GitHub. */
-const VERSION = '1.0.0';
+const VERSION = '1.0.2';
 const CACHE = 'bw-' + VERSION;
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './favicon.ico',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png',
