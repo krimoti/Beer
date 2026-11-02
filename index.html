@@ -911,12 +911,12 @@ let last=performance.now();
  const bs='font:800 15px Arial,sans-serif;border:0;border-radius:10px;padding:6px 14px;cursor:pointer;';
  bar.innerHTML='<span>🆕 גרסה חדשה זמינה</span><button id="updgo" style="'+bs+'background:#2a1410;color:#ffc247">עדכן עכשיו</button><button id="updlater" style="'+bs+'background:transparent;color:#2a1410">אחר כך</button>';
  document.body.appendChild(bar);
- let waiting=null,want=false;
+ let waiting=null,want=false,REG=null;
  const show=w=>{waiting=w;bar.style.display='flex'};
- bar.querySelector('#updgo').onclick=()=>{want=true;if(waiting&&waiting.state==='installed')waiting.postMessage({type:'SKIP_WAITING'});else location.reload()};
+ bar.querySelector('#updgo').onclick=()=>{want=true;bar.style.display='none';if(waiting&&waiting.state==='installed')try{waiting.postMessage({type:'SKIP_WAITING'})}catch(e){}setTimeout(async()=>{try{if(REG)await REG.unregister();if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}}catch(e){}location.reload()},1200)};
  bar.querySelector('#updlater').onclick=()=>{bar.style.display='none'};
  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(want)location.reload()});
- navigator.serviceWorker.register('sw.js').then(reg=>{
+ navigator.serviceWorker.register('sw.js').then(reg=>{REG=reg;
   if(reg.waiting&&navigator.serviceWorker.controller)show(reg.waiting);
   reg.addEventListener('updatefound',()=>{const nw=reg.installing;if(!nw)return;nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&navigator.serviceWorker.controller)show(nw)})});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)reg.update().catch(()=>{})});
